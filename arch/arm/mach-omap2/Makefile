@@ -279,7 +279,7 @@ obj-$(CONFIG_MACH_OMAP_BLAZE)		+= board-44xx-tablet.o \
 obj-$(CONFIG_MACH_OMAP4_PANDA)		+= board-omap4panda.o
 obj-$(CONFIG_MACH_TUNA)			+= board-tuna.o \
 					   board-tuna-android-usb.o \
-					   board-tuna-panel.o
+					   board-tuna-display.o
 
 obj-$(CONFIG_MACH_PCM049)		+= board-omap4pcm049.o
 
