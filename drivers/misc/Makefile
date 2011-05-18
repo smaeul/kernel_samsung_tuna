@@ -53,6 +53,7 @@ obj-$(CONFIG_ALTERA_STAPL)	+=altera-stapl/
 obj-$(CONFIG_MAX8997_MUIC)	+= max8997-muic.o
 obj-$(CONFIG_WL127X_RFKILL)	+= wl127x-rfkill.o
 obj-$(CONFIG_SENSORS_AK8975)	+= akm8975.o
+obj-y				+= inv_mpu/
 obj-$(CONFIG_DRV2667_HAPTICS)	+= drv2667.o
 obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
 obj-$(CONFIG_OMAP_SEVM_DOCK)	+= sevm_dock_station.o
