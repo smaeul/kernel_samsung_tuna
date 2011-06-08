@@ -281,7 +281,8 @@ obj-$(CONFIG_MACH_TUNA)			+= board-tuna.o \
 					   board-tuna-android-usb.o \
 					   board-tuna-display.o \
 					   board-tuna-input.o \
-					   board-tuna-power.o
+					   board-tuna-power.o \
+					   board-tuna-wifi.o
 
 obj-$(CONFIG_MACH_PCM049)		+= board-omap4pcm049.o
 
