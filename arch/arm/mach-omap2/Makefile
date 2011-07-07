@@ -278,6 +278,7 @@ obj-$(CONFIG_MACH_OMAP_BLAZE)		+= board-44xx-tablet.o \
 
 obj-$(CONFIG_MACH_OMAP4_PANDA)		+= board-omap4panda.o
 obj-$(CONFIG_MACH_TUNA)			+= board-tuna.o \
+					   board-tuna-connector.o \
 					   board-tuna-display.o \
 					   board-tuna-input.o \
 					   board-tuna-power.o \
