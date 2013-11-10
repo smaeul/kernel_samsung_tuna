@@ -564,33 +564,6 @@ static int s6e8aa0_sync(struct omap_dss_device *dssdev)
 	return 0;
 }
 
-static int s6e8aa0_set_update_mode(struct omap_dss_device *dssdev,
-			       enum omap_dss_update_mode mode)
-{
-	struct s6e8aa0_data *s6 = dev_get_drvdata(&dssdev->dev);
-
-	if (s6->force_update) {
-		if (mode != OMAP_DSS_UPDATE_AUTO)
-			return -EINVAL;
-	} else {
-		if (mode != OMAP_DSS_UPDATE_MANUAL)
-			return -EINVAL;
-	}
-
-	return 0;
-}
-
-static enum omap_dss_update_mode s6e8aa0_get_update_mode(struct omap_dss_device
-						     *dssdev)
-{
-	struct s6e8aa0_data *s6 = dev_get_drvdata(&dssdev->dev);
-
-	if (s6->force_update)
-		return OMAP_DSS_UPDATE_AUTO;
-	else
-		return OMAP_DSS_UPDATE_MANUAL;
-}
-
 #ifdef CONFIG_PM
 static int s6e8aa0_resume(struct omap_dss_device *dssdev)
 {
@@ -627,9 +600,6 @@ static struct omap_dss_driver s6e8aa0_driver = {
 	.suspend = s6e8aa0_suspend,
 	.resume = s6e8aa0_resume,
 #endif
-
-	.set_update_mode = s6e8aa0_set_update_mode,
-	.get_update_mode = s6e8aa0_get_update_mode,
 
 	.update = s6e8aa0_update,
 	.sync = s6e8aa0_sync,
