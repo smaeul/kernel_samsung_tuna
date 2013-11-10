@@ -69,15 +69,11 @@ static int charger_is_charging(void)
 static const __initdata struct resource charger_resources[] = {
 	{
 		.name = "ac",
-		.start = OMAP_GPIO_IRQ(GPIO_TA_NCONNECTED),
-		.end = OMAP_GPIO_IRQ(GPIO_TA_NCONNECTED),
 		.flags = IORESOURCE_IRQ |
 			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
 	},
 	{
 		.name = "usb",
-		.start = OMAP_GPIO_IRQ(GPIO_TA_NCONNECTED),
-		.end = OMAP_GPIO_IRQ(GPIO_TA_NCONNECTED),
 		.flags = IORESOURCE_IRQ |
 			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
 	}
@@ -129,6 +125,11 @@ void __init omap4_tuna_power_init(void)
 	omap_mux_init_gpio(charger_gpios[0].gpio, OMAP_PIN_INPUT);
 	omap_mux_init_gpio(charger_gpios[1].gpio, OMAP_PIN_INPUT);
 	omap_mux_init_gpio(charger_gpios[2].gpio, OMAP_PIN_OUTPUT);
+
+	charger_resources[0].start = gpio_to_irq(GPIO_TA_NCONNECTED);
+	charger_resources[0].end = gpio_to_irq(GPIO_TA_NCONNECTED);
+	charger_resources[1].start = gpio_to_irq(GPIO_TA_NCONNECTED);
+	charger_resources[1].end = gpio_to_irq(GPIO_TA_NCONNECTED);
 
 	pdev = platform_device_register_resndata(NULL, "pda-power", -1,
 		charger_resources, ARRAY_SIZE(charger_resources),
