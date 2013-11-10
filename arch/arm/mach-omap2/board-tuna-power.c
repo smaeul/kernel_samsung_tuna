@@ -25,6 +25,7 @@
 #include "board-tuna.h"
 #include "mux.h"
 #include "pm.h"
+#include "twl-common.h"
 
 /* These will be different on pre-lunchbox, lunchbox, and final */
 #define GPIO_CHARGING_N		83
@@ -66,7 +67,7 @@ static int charger_is_charging(void)
 	return !gpio_get_value(GPIO_CHARGING_N);
 }
 
-static const __initdata struct resource charger_resources[] = {
+static __initdata struct resource charger_resources[] = {
 	{
 		.name = "ac",
 		.flags = IORESOURCE_IRQ |
@@ -79,7 +80,7 @@ static const __initdata struct resource charger_resources[] = {
 	}
 };
 
-static const __initdata struct pda_power_pdata charger_pdata = {
+static __initdata struct pda_power_pdata charger_pdata = {
 	.init = charger_init,
 	.exit = charger_exit,
 	.is_ac_online = charger_is_ac_online,
@@ -94,7 +95,7 @@ static struct max17040_platform_data max17043_pdata = {
 	.charger_enable = charger_is_charging,
 };
 
-static const __initdata struct i2c_board_info max17043_i2c[] = {
+static __initdata struct i2c_board_info max17043_i2c[] = {
 	{
 		I2C_BOARD_INFO("max17040", (0x6C >> 1)),
 		.platform_data = &max17043_pdata,
