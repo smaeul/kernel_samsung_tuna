@@ -593,6 +593,7 @@ static int omap_abe_twl6040_init(struct snd_soc_pcm_runtime *rtd)
 		ret = snd_soc_jack_add_pins(&hs_jack, ARRAY_SIZE(hs_jack_pins),
 					hs_jack_pins);
 		if (machine_is_omap_4430sdp() ||
+			machine_is_tuna() ||
 			machine_is_omap_tabletblaze() ||
 			machine_is_omap5_sevm() ||
 			machine_is_omap5_panda())
