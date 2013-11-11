@@ -30,19 +30,21 @@
 #include <linux/reboot.h>
 
 #include <mach/hardware.h>
-#include <mach/omap4-common.h>
+//#include <mach/omap4-common.h>
 #include <asm/mach-types.h>
 #include <asm/mach/arch.h>
 #include <asm/mach/map.h>
 
 #include <plat/board.h>
 #include <plat/common.h>
+#include <plat/sdrc.h>
 #include <plat/usb.h>
 #include <plat/mmc.h>
-#include "timer-gp.h"
+//#include "timer-gp.h"
 
 #include "omap4-sar-layout.h"
 #include "hsmmc.h"
+#include "common.h"
 #include "control.h"
 #include "mux.h"
 #include "board-tuna.h"
@@ -128,8 +130,8 @@ static struct platform_device *tuna_devices[] __initdata = {
 
 static void __init tuna_init_early(void)
 {
-	omap2_init_common_infrastructure();
-	omap2_init_common_devices(NULL, NULL);
+//	omap2_init_common_infrastructure();
+	omap2_sdrc_init(NULL, NULL);
 }
 
 static struct omap_musb_board_data musb_board_data = {
@@ -143,11 +145,11 @@ static struct omap_musb_board_data musb_board_data = {
 };
 
 static struct twl4030_usb_data omap4_usbphy_data = {
-	.phy_init	= omap4430_phy_init,
+/*	.phy_init	= omap4430_phy_init,
 	.phy_exit	= omap4430_phy_exit,
 	.phy_power	= omap4430_phy_power,
 	.phy_set_clock	= omap4430_phy_set_clk,
-	.phy_suspend	= omap4430_phy_suspend,
+	.phy_suspend	= omap4430_phy_suspend,*/
 };
 
 static struct omap2_hsmmc_info mmc[] = {
@@ -167,7 +169,7 @@ static struct omap2_hsmmc_info mmc[] = {
 		.gpio_cd	= -EINVAL,
 		.ocr_mask	= MMC_VDD_165_195 | MMC_VDD_20_21,
 		.nonremovable	= false,
-		.mmc_data	= &tuna_wifi_data,
+/*		.mmc_data	= &tuna_wifi_data, */
 	},
 	{}	/* Terminator */
 };
@@ -304,12 +306,12 @@ static struct regulator_init_data tuna_clk32kg = {
 	},
 };
 
-static struct twl4030_codec_audio_data twl6040_audio = {
-	/* Add audio only data */
+static struct twl4030_codec_data twl6040_codec = {
+	/* Add codec only data */
 };
 
-static struct twl4030_codec_data twl6040_codec = {
-	.audio		= &twl6040_audio,
+static struct twl4030_audio_data twl6040_audio = {
+	.codec		= &twl6040_codec,
 	.naudint_irq	= OMAP44XX_IRQ_SYS_2N,
 	.irq_base	= TWL6040_CODEC_IRQ_BASE,
 };
@@ -331,7 +333,7 @@ static struct twl4030_platform_data tuna_twldata = {
 	.usb		= &omap4_usbphy_data,
 
 	/* children */
-	.codec		= &twl6040_codec,
+	.audio		= &twl6040_audio,
 };
 
 static void tuna_audio_init(void)
@@ -349,7 +351,7 @@ static void tuna_audio_init(void)
 	else
 		aud_pwron = GPIO_AUD_PWRON;
 	omap_mux_init_gpio(aud_pwron, OMAP_PIN_OUTPUT);
-	twl6040_codec.audpwron_gpio = aud_pwron;
+	twl6040_audio.audpwron_gpio = aud_pwron;
 }
 
 static struct i2c_board_info __initdata tuna_i2c1_boardinfo[] = {
@@ -451,11 +453,11 @@ static inline void board_serial_init(void)
 	bdata.pads_cnt  = 0;
 	bdata.id        = 0;
 	/* pass dummy data for UART1 */
-	omap_serial_init_port(&bdata);
+	omap_serial_init_port(&bdata, NULL);
 
-	omap_serial_init_port(&serial2_data);
-	omap_serial_init_port(&serial3_data);
-	omap_serial_init_port(&serial4_data);
+	omap_serial_init_port(&serial2_data, NULL);
+	omap_serial_init_port(&serial3_data, NULL);
+	omap_serial_init_port(&serial4_data, NULL);
 }
 #else
 #define board_mux	NULL
@@ -572,7 +574,7 @@ static void __init tuna_init(void)
 	tuna_i2c_init();
 	platform_add_devices(tuna_devices, ARRAY_SIZE(tuna_devices));
 	board_serial_init();
-	omap2_hsmmc_init(mmc);
+	omap_hsmmc_init(mmc);
 	usb_musb_init(&musb_board_data);
 	omap4_tuna_display_init();
 	omap4_tuna_input_init();
@@ -589,11 +591,11 @@ static void __init tuna_map_io(void)
 
 MACHINE_START(TUNA, "Tuna")
 	/* Maintainer: Google, Inc */
-	.boot_params	= 0x80000100,
+	.atag_offset	= 0x100,
 	.reserve	= omap_reserve,
 	.map_io		= tuna_map_io,
 	.init_early	= tuna_init_early,
 	.init_irq	= gic_init_irq,
 	.init_machine	= tuna_init,
-	.timer		= &omap_timer,
+	.timer		= &omap4_timer,
 MACHINE_END

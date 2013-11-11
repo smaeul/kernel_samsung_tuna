@@ -26,6 +26,7 @@
 #include <linux/regulator/machine.h>
 #include <linux/regulator/driver.h>
 #include <linux/regulator/fixed.h>
+#include <asm/mach/mmc.h>
 #include <plat/mmc.h>
 
 #include <linux/random.h>
@@ -340,7 +341,7 @@ static void __init tuna_wlan_gpio(void)
 	/* WLAN PMENA - GPIO 104 */
 	omap_mux_init_signal("gpmc_ncs7.gpio_104", OMAP_PIN_OUTPUT);
 	/* Enable power to gpio_wk0-gpio_wk2 */
-	omap4_ctrl_wk_pad_writel(0xb0000000,
+	omap4_ctrl_pad_writel(0xb0000000,
 		OMAP4_CTRL_MODULE_PAD_WKUP_CONTROL_USIMIO);
 
 	/* gpio_enable(GPIO_WLAN_IRQ); */

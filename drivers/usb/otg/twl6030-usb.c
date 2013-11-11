@@ -268,11 +268,11 @@ static irqreturn_t twl6030_usb_irq(int irq, void *_twl)
 			wake_lock(&twl->charger_det_lock);
 			twl6030_enable_ldo_input_supply(twl, true);
 			regulator_enable(twl->usb3v3);
-			charger_type = omap_usb2_charger_detect(
+			/*charger_type = omap_usb2_charger_detect(
 					&twl->comparator);
 			if (charger_type == POWER_SUPPLY_TYPE_USB_DCP)
 				event = USB_EVENT_CHARGER;
-			else
+			else*/
 				event = USB_EVENT_VBUS;
 			twl->asleep = 1;
 			status = OMAP_MUSB_VBUS_VALID;
