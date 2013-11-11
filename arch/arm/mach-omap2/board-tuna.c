@@ -30,7 +30,6 @@
 #include <linux/reboot.h>
 
 #include <mach/hardware.h>
-//#include <mach/omap4-common.h>
 #include <asm/mach-types.h>
 #include <asm/mach/arch.h>
 #include <asm/mach/map.h>
@@ -40,11 +39,11 @@
 #include <plat/sdrc.h>
 #include <plat/usb.h>
 #include <plat/mmc.h>
-//#include "timer-gp.h"
 
 #include "omap4-sar-layout.h"
 #include "hsmmc.h"
 #include "common.h"
+#include "common-board-devices.h"
 #include "control.h"
 #include "mux.h"
 #include "board-tuna.h"
@@ -144,14 +143,6 @@ static struct omap_musb_board_data musb_board_data = {
 	.power			= 100,
 };
 
-static struct twl4030_usb_data omap4_usbphy_data = {
-/*	.phy_init	= omap4430_phy_init,
-	.phy_exit	= omap4430_phy_exit,
-	.phy_power	= omap4430_phy_power,
-	.phy_set_clock	= omap4430_phy_set_clk,
-	.phy_suspend	= omap4430_phy_suspend,*/
-};
-
 static struct omap2_hsmmc_info mmc[] = {
 	{
 		.mmc		= 1,
@@ -174,30 +165,6 @@ static struct omap2_hsmmc_info mmc[] = {
 	{}	/* Terminator */
 };
 
-static struct regulator_consumer_supply tuna_vmmc_supply[] = {
-	{
-		.supply = "vmmc",
-		.dev_name = "omap_hsmmc.0",
-	},
-	{
-		.supply = "vmmc",
-		.dev_name = "omap_hsmmc.1",
-	},
-};
-
-static struct regulator_init_data tuna_vaux2 = {
-	.constraints = {
-		.min_uV			= 1200000,
-		.max_uV			= 2800000,
-		.apply_uV		= true,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask	 = REGULATOR_CHANGE_VOLTAGE
-					| REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-	},
-};
-
 static struct regulator_consumer_supply tuna_vaux3_supplies[] = {
 	{
 		.supply = "vlcd",
@@ -211,99 +178,12 @@ static struct regulator_init_data tuna_vaux3 = {
 		.apply_uV		= true,
 		.valid_modes_mask	= REGULATOR_MODE_NORMAL
 					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask	 = REGULATOR_CHANGE_VOLTAGE
+		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE
 					| REGULATOR_CHANGE_MODE
 					| REGULATOR_CHANGE_STATUS,
 	},
 	.num_consumer_supplies = ARRAY_SIZE(tuna_vaux3_supplies),
 	.consumer_supplies = tuna_vaux3_supplies,
-};
-
-static struct regulator_init_data tuna_vmmc = {
-	.constraints = {
-		.min_uV			= 1800000,
-		.max_uV			= 1800000,
-		.apply_uV		= true,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask	 = REGULATOR_CHANGE_VOLTAGE
-					| REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-	},
-	.num_consumer_supplies = 2,
-	.consumer_supplies = tuna_vmmc_supply,
-};
-
-static struct regulator_init_data tuna_vpp = {
-	.constraints = {
-		.min_uV			= 1800000,
-		.max_uV			= 2500000,
-		.apply_uV		= true,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask	 = REGULATOR_CHANGE_VOLTAGE
-					| REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-	},
-};
-
-static struct regulator_init_data tuna_vana = {
-	.constraints = {
-		.min_uV			= 2100000,
-		.max_uV			= 2100000,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask	 = REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-	},
-};
-
-static struct regulator_consumer_supply tuna_vcxio_supply[] = {
-	REGULATOR_SUPPLY("vdds_dsi", "omapdss_dss"),
-	REGULATOR_SUPPLY("vdds_dsi", "omapdss_dsi1"),
-};
-
-static struct regulator_init_data tuna_vcxio = {
-	.constraints = {
-		.min_uV			= 1800000,
-		.max_uV			= 1800000,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask	 = REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-	},
-	.num_consumer_supplies	= ARRAY_SIZE(tuna_vcxio_supply),
-	.consumer_supplies	= tuna_vcxio_supply,
-
-};
-
-static struct regulator_init_data tuna_vdac = {
-	.constraints = {
-		.min_uV			= 1800000,
-		.max_uV			= 1800000,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask	 = REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-	},
-};
-
-static struct regulator_init_data tuna_vusb = {
-	.constraints = {
-		.min_uV			= 3300000,
-		.max_uV			= 3300000,
-		.apply_uV		= true,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask	 =	REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-	},
-};
-
-static struct regulator_init_data tuna_clk32kg = {
-	.constraints = {
-		.valid_ops_mask		= REGULATOR_CHANGE_STATUS,
-	},
 };
 
 static struct twl4030_codec_data twl6040_codec = {
@@ -317,22 +197,7 @@ static struct twl4030_audio_data twl6040_audio = {
 };
 
 static struct twl4030_platform_data tuna_twldata = {
-	.irq_base	= TWL6030_IRQ_BASE,
-	.irq_end	= TWL6030_IRQ_END,
-
-	/* Regulators */
-	.vmmc		= &tuna_vmmc,
-	.vpp		= &tuna_vpp,
-	.vana		= &tuna_vana,
-	.vcxio		= &tuna_vcxio,
-	.vdac		= &tuna_vdac,
-	.vusb		= &tuna_vusb,
-	.vaux2		= &tuna_vaux2,
 	.vaux3		= &tuna_vaux3,
-	.clk32kg	= &tuna_clk32kg,
-	.usb		= &omap4_usbphy_data,
-
-	/* children */
 	.audio		= &twl6040_audio,
 };
 
@@ -365,6 +230,16 @@ static struct i2c_board_info __initdata tuna_i2c1_boardinfo[] = {
 
 static int __init tuna_i2c_init(void)
 {
+	omap4_pmic_get_config(&tuna_twldata, TWL_COMMON_PDATA_USB,
+		TWL_COMMON_REGULATOR_VDAC |
+		TWL_COMMON_REGULATOR_VAUX2 |
+		TWL_COMMON_REGULATOR_VMMC |
+		TWL_COMMON_REGULATOR_VPP |
+		TWL_COMMON_REGULATOR_VANA |
+		TWL_COMMON_REGULATOR_VCXIO |
+		TWL_COMMON_REGULATOR_VUSB |
+		TWL_COMMON_REGULATOR_CLK32KG);
+
 	omap_mux_init_signal("sys_nirq1", OMAP_PIN_INPUT_PULLUP);
 	omap_mux_init_signal("i2c1_scl.i2c1_scl", OMAP_PIN_INPUT_PULLUP);
 	omap_mux_init_signal("i2c1_sda.i2c1_sda", OMAP_PIN_INPUT_PULLUP);
@@ -398,75 +273,9 @@ static struct omap_board_mux board_wkup_mux[] __initdata = {
 	{ .reg_offset = OMAP_MUX_TERMINATOR },
 };
 
-static struct omap_device_pad serial2_pads[] __initdata = {
-	OMAP_MUX_STATIC("uart2_cts.uart2_cts",
-			 OMAP_PIN_INPUT_PULLUP | OMAP_MUX_MODE0),
-	OMAP_MUX_STATIC("uart2_rts.uart2_rts",
-			 OMAP_PIN_OUTPUT | OMAP_MUX_MODE0),
-	OMAP_MUX_STATIC("uart2_rx.uart2_rx",
-			 OMAP_PIN_INPUT_PULLUP | OMAP_MUX_MODE0),
-	OMAP_MUX_STATIC("uart2_tx.uart2_tx",
-			 OMAP_PIN_OUTPUT | OMAP_MUX_MODE0),
-};
-
-static struct omap_device_pad serial3_pads[] __initdata = {
-	OMAP_MUX_STATIC("uart3_cts_rctx.uart3_cts_rctx",
-			 OMAP_PIN_INPUT_PULLUP | OMAP_MUX_MODE0),
-	OMAP_MUX_STATIC("uart3_rts_sd.uart3_rts_sd",
-			 OMAP_PIN_OUTPUT | OMAP_MUX_MODE0),
-	OMAP_MUX_STATIC("uart3_rx_irrx.uart3_rx_irrx",
-			 OMAP_PIN_INPUT | OMAP_MUX_MODE0),
-	OMAP_MUX_STATIC("uart3_tx_irtx.uart3_tx_irtx",
-			 OMAP_PIN_OUTPUT | OMAP_MUX_MODE0),
-};
-
-static struct omap_device_pad serial4_pads[] __initdata = {
-	OMAP_MUX_STATIC("uart4_rx.uart4_rx",
-			 OMAP_PIN_INPUT | OMAP_MUX_MODE0),
-	OMAP_MUX_STATIC("uart4_tx.uart4_tx",
-			 OMAP_PIN_OUTPUT | OMAP_MUX_MODE0),
-};
-
-static struct omap_board_data serial2_data = {
-	.id             = 1,
-	.pads           = serial2_pads,
-	.pads_cnt       = ARRAY_SIZE(serial2_pads),
-};
-
-static struct omap_board_data serial3_data = {
-	.id             = 2,
-	.pads           = serial3_pads,
-	.pads_cnt       = ARRAY_SIZE(serial3_pads),
-};
-
-static struct omap_board_data serial4_data = {
-	.id             = 3,
-	.pads           = serial4_pads,
-	.pads_cnt       = ARRAY_SIZE(serial4_pads),
-};
-
-static inline void board_serial_init(void)
-{
-	struct omap_board_data bdata;
-	bdata.flags     = 0;
-	bdata.pads      = NULL;
-	bdata.pads_cnt  = 0;
-	bdata.id        = 0;
-	/* pass dummy data for UART1 */
-	omap_serial_init_port(&bdata, NULL);
-
-	omap_serial_init_port(&serial2_data, NULL);
-	omap_serial_init_port(&serial3_data, NULL);
-	omap_serial_init_port(&serial4_data, NULL);
-}
 #else
 #define board_mux	NULL
 #define board_wkup_mux	NULL
-
-static inline void board_serial_init(void)
-{
-	omap_serial_init();
-}
 #endif
 
 static int tuna_notifier_call(struct notifier_block *this,
@@ -573,7 +382,7 @@ static void __init tuna_init(void)
 	tuna_audio_init();
 	tuna_i2c_init();
 	platform_add_devices(tuna_devices, ARRAY_SIZE(tuna_devices));
-	board_serial_init();
+	omap_serial_init();
 	omap_hsmmc_init(mmc);
 	usb_musb_init(&musb_board_data);
 	omap4_tuna_display_init();
@@ -598,4 +407,5 @@ MACHINE_START(TUNA, "Tuna")
 	.init_irq	= gic_init_irq,
 	.init_machine	= tuna_init,
 	.timer		= &omap4_timer,
+	.restart	= omap_prcm_restart,
 MACHINE_END
