@@ -113,7 +113,17 @@ static struct i2c_driver ad_dpot_i2c_driver = {
 	.id_table	= ad_dpot_id,
 };
 
-module_i2c_driver(ad_dpot_i2c_driver);
+static int __init ad_dpot_i2c_init(void)
+{
+	return i2c_add_driver(&ad_dpot_i2c_driver);
+}
+module_init(ad_dpot_i2c_init);
+
+static void __exit ad_dpot_i2c_exit(void)
+{
+	i2c_del_driver(&ad_dpot_i2c_driver);
+}
+module_exit(ad_dpot_i2c_exit);
 
 MODULE_AUTHOR("Michael Hennerich <hennerich@blackfin.uclinux.org>");
 MODULE_DESCRIPTION("digital potentiometer I2C bus driver");

@@ -541,7 +541,17 @@ static struct i2c_driver fsa9480_i2c_driver = {
 	.id_table = fsa9480_id,
 };
 
-module_i2c_driver(fsa9480_i2c_driver);
+static int __init fsa9480_init(void)
+{
+	return i2c_add_driver(&fsa9480_i2c_driver);
+}
+module_init(fsa9480_init);
+
+static void __exit fsa9480_exit(void)
+{
+	i2c_del_driver(&fsa9480_i2c_driver);
+}
+module_exit(fsa9480_exit);
 
 MODULE_AUTHOR("Minkyu Kang <mk7.kang@samsung.com>");
 MODULE_DESCRIPTION("FSA9480 USB Switch driver");
